@@ -52,7 +52,11 @@ devices = [
     'a9a2eefe-f409-45b2-92ee-d5e5cd3d29c2'
 ]
 
-file_path = 'sample.csv'
+file_paths = [
+    'datasets/2016-09-20 20:48:59.csv',
+    'datasets/2016-09-20 23:10:04.csv',
+    'datasets/2016-09-20 23:10:22.csv'
+]
 output_path = '../output.csv'
 
 
@@ -71,32 +75,36 @@ def print_state(m_state, m_devices, m_csv_file):
     m_csv_file.writerow(m_state + [numeric_state])
 
 
-with open(file_path, 'rb') as db_file, open(output_path, 'ab') as output_file:
+def process_file(m_path):
+    with open(m_path, 'rb') as db_file, open(output_path, 'ab') as output_file:
 
-    current_state = [None, None, None, None, None, None, None, None]
-    current_devices = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        current_state = [None, None, None, None, None, None, None, None]
+        current_devices = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-    samples_csv = csv.reader(db_file)
-    output_csv = csv.writer(output_file)
+        samples_csv = csv.reader(db_file)
+        output_csv = csv.writer(output_file)
 
-    for row in sorted(samples_csv, key=lambda csv_row: csv_row[0]):
-        # print(', '.join(row))
-        time = row[0]
-        uuid = row[1]
-        state = row[2]
+        for row in sorted(samples_csv, key=lambda csv_row: csv_row[0]):
+            # print(', '.join(row))
+            time = row[0]
+            uuid = row[1]
+            state = row[2]
 
-        if uuid in sensors:
-            index = sensors.index(uuid)
-            current_state[index] = state
-            # Apple TV broadcasts too often
-            if uuid == '3ec3d2ca-4624-4943-a2f6-69e222c57393':
+            if uuid in sensors:
+                index = sensors.index(uuid)
+                current_state[index] = state
+                # Apple TV broadcasts too often
+                if uuid == '3ec3d2ca-4624-4943-a2f6-69e222c57393':
+                    continue
+
+                print_state(current_state, current_devices, output_csv)
                 continue
 
-            print_state(current_state, current_devices, output_csv)
-            continue
+            if uuid in devices:
+                index = devices.index(uuid)
+                current_devices[index] = state
+                print_state(current_state, current_devices, output_csv)
+                continue
 
-        if uuid in devices:
-            index = devices.index(uuid)
-            current_devices[index] = state
-            print_state(current_state, current_devices, output_csv)
-            continue
+for path in file_paths:
+    process_file(path)
