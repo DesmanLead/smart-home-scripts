@@ -53,19 +53,31 @@ devices = [
 ]
 
 file_path = 'sample.csv'
+output_path = '../output.csv'
 
 
-def print_state(m_state, m_devices):
+def convert_devices(m_devices):
+    result = 0
+    for idx, x in enumerate(m_devices):
+        result += int(x) * pow(2, idx)
+    return result
+
+
+def print_state(m_state, m_devices, m_csv_file):
     if None in m_state:
         return
-    print('(' + ', '.join(str(x) for x in m_state) + ') -> (' + ', '.join(str(x) for x in m_devices) + ')')
+    numeric_state = convert_devices(m_devices)
+    print('(' + ', '.join(str(x) for x in m_state) + ') -> ' + str(numeric_state) + ' (' + ', '.join(str(x) for x in m_devices) + ')')
+    m_csv_file.writerow(m_state + [numeric_state])
 
-with open(file_path, 'rb') as db_file:
+
+with open(file_path, 'rb') as db_file, open(output_path, 'ab') as output_file:
 
     current_state = [None, None, None, None, None, None, None, None]
     current_devices = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     samples_csv = csv.reader(db_file)
+    output_csv = csv.writer(output_file)
 
     for row in sorted(samples_csv, key=lambda csv_row: csv_row[0]):
         # print(', '.join(row))
@@ -80,11 +92,11 @@ with open(file_path, 'rb') as db_file:
             if uuid == '3ec3d2ca-4624-4943-a2f6-69e222c57393':
                 continue
 
-            print_state(current_state, current_devices)
+            print_state(current_state, current_devices, output_csv)
             continue
 
         if uuid in devices:
             index = devices.index(uuid)
             current_devices[index] = state
-            print_state(current_state, current_devices)
+            print_state(current_state, current_devices, output_csv)
             continue
