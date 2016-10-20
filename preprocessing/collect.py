@@ -55,7 +55,10 @@ devices = [
 file_paths = [
     'datasets/2016-09-20 20:48:59.csv',
     'datasets/2016-09-20 23:10:04.csv',
-    'datasets/2016-09-20 23:10:22.csv'
+    'datasets/2016-09-20 23:10:22.csv',
+    'datasets/2016-09-21 20:04:18.csv',
+    'datasets/2016-10-19 19:47:40.csv',
+    'datasets/2016-10-19 20:28:18.csv'
 ]
 output_path = '../output.csv'
 

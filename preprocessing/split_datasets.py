@@ -14,7 +14,7 @@ with open(data_set_path, 'rb') as ds_file, \
 
     total_samples = sum(1 for row in samples_csv)
 
-    training_set_size = total_samples / 3
+    training_set_size = total_samples * 3 / 4
 
     ds_file.seek(0)
 
