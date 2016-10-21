@@ -19,6 +19,8 @@ with open(training_set_path, 'rb') as training_file, open(testing_set_path, 'rb'
     clf = svm.SVC(decision_function_shape='ovr')
     clf.fit(X, Y)
 
+    print(clf)
+
     X_test = []
     Y_test = []
 

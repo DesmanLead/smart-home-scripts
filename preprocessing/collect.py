@@ -58,7 +58,11 @@ file_paths = [
     'datasets/2016-09-20 23:10:22.csv',
     'datasets/2016-09-21 20:04:18.csv',
     'datasets/2016-10-19 19:47:40.csv',
-    'datasets/2016-10-19 20:28:18.csv'
+    'datasets/2016-10-19 20:28:18.csv',
+    'datasets/2016-10-20 19:47:47.csv',
+    # Different activity templates:
+    # 'datasets/2016-10-20 22:26:26.csv',
+    # 'datasets/2016-10-20 22:37:10.csv'
 ]
 output_path = '../output.csv'
 
@@ -108,6 +112,10 @@ def process_file(m_path):
                 current_devices[index] = state
                 print_state(current_state, current_devices, output_csv)
                 continue
+
+f = open(output_path, "w")
+f.truncate()
+f.close()
 
 for path in file_paths:
     process_file(path)
