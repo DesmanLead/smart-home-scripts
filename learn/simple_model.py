@@ -15,11 +15,8 @@ with open(training_set_path, 'rb') as training_file, open(testing_set_path, 'rb'
         Y.append(row[-1])
 
     from sklearn import svm
-    from sklearn.model_selection import cross_val_score
 
     clf = svm.SVC(decision_function_shape='ovr')
-
-    print(cross_val_score(clf, X, Y, scoring='roc_auc'))
 
     clf.fit(X, Y)
 
