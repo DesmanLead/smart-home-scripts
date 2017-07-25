@@ -81,3 +81,9 @@ class Record(object):
             "1b0ada96-f4e0-4edc-8441-d0ed12d9ba53",  # "Kitchen Local Light"
             "9660cb58-ab9f-448b-add8-ed5d76e3de66",  # "Bedroom Local Light"
         ]
+
+    def is_from_dense_data_source(self):
+        return self.description() in ['MI_SCALE', 'Apple TV']
+
+    def __repr__(self):
+        return '< %f, %s, %f, %s >' % (self.timestamp(), self.uuid(), self.value(), self.description())
