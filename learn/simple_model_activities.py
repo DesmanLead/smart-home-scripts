@@ -3,24 +3,29 @@
 
 from preprocessing.data_loading import load
 from sklearn import svm
-from sklearn.model_selection import cross_val_score
+# from sklearn.model_selection import cross_val_score
+from sklearn.metrics import roc_curve
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
 
 
 raw_data = load('/Users/akirienko/Dropbox/Учеба/Аспирантура/SHDataActivity/Mine/*.csv')
 
+activities = {}
 activity_uuids = []
 sensor_uuids = []
 
 for record in raw_data:
     if record.is_activity() and record.uuid() not in activity_uuids:
         activity_uuids.append(record.uuid())
+        activities[record.uuid()] = record
     if record.is_sensor_data() and record.uuid() not in sensor_uuids:
         sensor_uuids.append(record.uuid())
 
 X = []
 Y = []
 
-activity_of_interest = activity_uuids[1]
+activity_of_interest = activity_uuids[5]
 
 current_state = [None] * len(sensor_uuids)
 current_activity = None
@@ -39,7 +44,29 @@ for record in raw_data:
             current_activity = None
 
 
-clf = svm.SVC()
+print 'Evaluation results for activity: %s' % activities[activity_of_interest].description()
 
-print 'AUC: %s' % cross_val_score(clf, X, Y, scoring='roc_auc')
-print 'Accuracy: %s %%' % cross_val_score(clf, X, Y, scoring='accuracy')
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=.1,
+                                                    random_state=0)
+
+clf = svm.SVC()
+clf.fit(X_train, y_train)
+y_score = clf.decision_function(X_test)
+
+fpr, tpr, _ = roc_curve(y_test, y_score)
+
+plt.figure()
+lw = 2
+plt.plot(fpr, tpr, color='darkorange',
+         lw=lw, label='ROC curve')
+plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver operating characteristic')
+plt.legend(loc="lower right")
+plt.show()
+
+# print 'AUC: %s' % cross_val_score(clf, X, Y, scoring='roc_auc')
+# print 'Accuracy: %s %%' % cross_val_score(clf, X, Y, scoring='accuracy')
