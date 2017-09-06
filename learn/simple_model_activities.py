@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import os
+
 from preprocessing.data_loading import load
 from sklearn import svm
 from sklearn.model_selection import cross_val_score
@@ -9,8 +11,8 @@ from sklearn.model_selection import cross_val_score
 # from sklearn.model_selection import train_test_split
 # import csv
 
-
-raw_data = load('/Users/akirienko/Dropbox/Учеба/Аспирантура/SHDataActivity/Mine/*.csv')
+data_folder_path = os.path.expanduser('~/Dropbox/Учеба/Аспирантура/SHDataActivity/Mine/*.csv')
+raw_data = load(data_folder_path)
 
 activities = {}
 activity_uuids = []
