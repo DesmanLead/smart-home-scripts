@@ -31,19 +31,21 @@ current_state = [0] * len(sensor_uuids)
 current_state[0] = None
 current_activity = None
 
-ma_filter = MovingAverage(-255)
+ma_filters = [MovingAverage(0, size=4) for n in range(len(sensor_uuids))]
 
 for record in raw_data:
     uuid = record.uuid()
 
     if uuid in sensor_uuids:
-        # filtering
-        signal_strength = record.value()
-        if signal_strength == 0:
-            signal_strength = -255
-        ma_filter.put(signal_strength)
+        index = sensor_uuids.index(uuid)
 
-        current_state[sensor_uuids.index(uuid)] = ma_filter.filtered_value()
+        # filtering
+        value = record.value()
+        if record.is_beacon_rssi() and value == 0:
+            value = -255
+        ma_filters[index].put(value)
+
+        current_state[index] = ma_filters[index].filtered_value()
 
         # appending feature vector if needed
         if None not in current_state and not record.is_from_dense_data_source():
