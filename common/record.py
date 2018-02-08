@@ -62,6 +62,9 @@ class Record(object):
             "EBEFD083-70A2-47C8-9837-E7B5634DF526".lower(),  # "ToiletBeacon2"
         ]
 
+    def is_beacon_rssi(self):
+        return "d9114d7c-6168-4471-805e-95c5ed325dc5" != self.uuid() and self.is_sensor_data()
+
     def is_device_state(self):
         return self.uuid() in [
             # Initial list

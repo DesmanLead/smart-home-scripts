@@ -4,6 +4,7 @@
 import csv
 import json
 import glob
+import os
 from common.record import Record
 
 
@@ -39,7 +40,8 @@ def extract_uuids(file_path):
                 uuids[record.uuid()] = record.description()
 
 
-for filename in glob.glob('/Users/akirienko/Dropbox/Учеба/Аспирантура/SHDataActivity/Max/*.csv'):
+path = os.path.expanduser('~/Dropbox/Учеба/Аспирантура/SHDataActivity/Max/*.csv')
+for filename in glob.glob(path):
     extract_uuids(filename)
 
 
