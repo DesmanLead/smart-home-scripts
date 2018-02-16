@@ -62,5 +62,5 @@ for activity_of_interest in activity_uuids:
 
     clf = svm.SVC()
 
-    print 'AUC: %s' % cross_val_score(clf, X, Y, scoring='roc_auc', n_jobs=2)
-    print 'Accuracy: %s %%' % cross_val_score(clf, X, Y, scoring='accuracy', n_jobs=2)
+    print 'AUC: %s' % cross_val_score(clf, X, Y, scoring='roc_auc', n_jobs=3)
+    print 'Accuracy: %s %%' % cross_val_score(clf, X, Y, scoring='accuracy', n_jobs=3)
